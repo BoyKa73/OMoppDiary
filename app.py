@@ -65,7 +65,9 @@ migrate = Migrate(app, db)
 @app.route('/')
 def home():
     # TODO: Einträge aus DB laden und an Template übergeben
-    return 'Hello, Flask!'
+
+    # return render_template("index.html", tasks=tasks, today=datetime.today().date())
+    return render_template("index.html", today=datetime.today().date())
 
 
 # --- App-Start ---
