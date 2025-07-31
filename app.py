@@ -1,9 +1,18 @@
-# Module die wir brauchen können
-from flask import Flask
-# SQLite Anbindung
+# --- Imports und Setup ---
+# Flask: Web-Framework
+from flask import Flask, render_template
+# SQLAlchemy: ORM für Datenbankzugriff
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, time 
-# etwas zum Authentifizieren später, damit niemand anders darauf zugreifen kann und um Authentifizierung zu üben, eine Art Admin Modus
+# Datumsfunktionen
+from datetime import datetime, time
+# Datenbank-Objekt aus externer models.py
+from models import db 
+# Flask-Migrate: Migrationstool für DB-Schema
+from flask_migrate import Migrate
+# werden wir garantiert brauchen für die resp der Routen
+from flask import jsonify
+
+# TODO: Authentifizierung einbauen (z.B. Admin-Modus mit Flask-Login)
 
 
 # Flask-Migrate Recherche:
@@ -41,15 +50,32 @@ from datetime import datetime, time
 # Statische Dateien:
 # Lege einen static-Ordner für CSS/JS an, um das Design zu verbessern.
 
-app = Flask(__name__)
 
+# --- Flask App & Konfiguration ---
 app = Flask(__name__, static_folder='static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tagebuch.db'
-app.config['SECRET_KEY'] = 'geheim'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tagebuch.db'  # SQLite DB
+app.config['SECRET_KEY'] = 'geheim'  # Für Sessions, CSRF etc.
 
+# --- DB & Migration initialisieren ---
+db.init_app(app)
+migrate = Migrate(app, db)
+
+
+# --- Routen ---
 @app.route('/')
 def home():
+    # TODO: Einträge aus DB laden und an Template übergeben
     return 'Hello, Flask!'
 
+
+# --- App-Start ---
 if __name__ == '__main__':
     app.run(debug=True)
+
+# --- Weitere Schritte (TODOs) ---
+# 1. Datenbankmodell für Tagebucheintrag in models.py anlegen (z.B. Datum, Titel, Text)
+# 2. CRUD-Routen für Einträge implementieren (anzeigen, hinzufügen, bearbeiten, löschen)
+# 3. Templates (Ordner: templates/) für HTML-Ausgabe erstellen
+# 4. Formulare für Einträge (Flask-WTF oder HTML)
+# 5. Authentifizierung (z.B. Admin-Login mit Flask-Login)
+# 6. Statische Dateien (Ordner: static/) für CSS/JS anlegen
