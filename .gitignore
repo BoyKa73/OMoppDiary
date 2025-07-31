@@ -1,0 +1,18 @@
+# Virtuelle Umgebung
+venv/
+.venv/
+./venv
+
+# Python-Cache
+__pycache__/
+*.pyc
+
+# SQLite-Datenbank später nicht mitpushen, da privat
+#*.db
+
+# Umgebungsvariablen später nicht mitpushen, da womöglich lokal anders
+# .env
+
+# VSCode-Ordner
+.vscode/
+
