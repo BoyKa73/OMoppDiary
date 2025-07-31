@@ -1,0 +1,65 @@
+body {
+  font-family: 'Caveat', cursive;
+  background: linear-gradient(135deg, #E6E6FA 0%, #f9f9ff 100%);
+  min-height: 100vh;
+}
+
+
+
+.card {
+  background-color: #E6E6FA;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(102, 102, 153, 0.13);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 32px rgba(102, 102, 153, 0.18);
+}
+
+
+.card-header {
+  background: linear-gradient(135deg, #f9f9ff 0%, #E6E6FA 100%);
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+  border-radius: 20px 20px 0 0;
+}
+
+.card-header .btn-link {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4B367C; 
+  text-decoration: none;
+  padding: 0;
+}
+
+.card-header .btn-link:hover {
+  color: #7F71A1; 
+  text-decoration: underline;
+}
+
+
+.card-body {
+  padding: 1.5rem 2rem;
+  color: #4B367C;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #f9f9ff 0%, #E6E6FA 100%);
+  border-radius: 0 0 20px 20px;
+}
+
+
+#calendar {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  color: #4B367C;
+  min-height: 180px;
+  background: #f9f9ff;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(102,102,153,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  padding: 2rem;
+}
