@@ -2,6 +2,7 @@
 venv/
 .venv/
 ./venv
+venv-omoppdiary/
 
 # Python-Cache
 __pycache__/
