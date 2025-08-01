@@ -18,7 +18,7 @@ __pycache__/
 .vscode/
 
 # Flask instance-Ordner (z.B. für config oder DB)
-instance/
+# instance/
 
 # DB Migration
 migrations/
