@@ -3,7 +3,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# Das db-Objekt wird in app.py initialisiert und hier importiert
+# Das db-Objekt wird hier initialisiert und in app.py importiert
 db = SQLAlchemy()
 
 # --- Datenbankmodelle ---
