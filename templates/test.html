@@ -9,6 +9,10 @@
 <body>
 <div class="container mt-5">
     <h1 class="mb-4">Alle Tasks</h1>
+    {% if error %}
+        <div class="alert alert-danger">Fehler: {{ error }}</div>
+    {% endif %}
+    <!-- <h2 class="mb-4">Heute ist {{ today }}</h2> -->
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>

@@ -21,10 +21,10 @@ app.config['SECRET_KEY'] = 'geheim'  # Für Sessions, CSRF etc.
 db.init_app(app)
 migrate = Migrate(app, db)
 
-# alle Tasks holen
-tasks = Task.query.all()
 
 # --- Routen ---
+
+
 @app.route('/')
 def home():
     # TODO: Einträge aus DB laden und an Template übergeben
@@ -32,11 +32,17 @@ def home():
     # return render_template("index.html", tasks=tasks, today=datetime.today().date())
     return render_template("index.html", today=datetime.today().date())
 
-@app.route('/test')
-def home():
-    # Einträge aus DB laden und an Template übergeben
+@app.route('/test/')
+def test_route():
+    try:
+        # Beispiel: Tasks aus DB laden (anpassen, falls nötig)
+        tasks = Task.query.all()
+        return render_template("test.html", tasks=tasks, today=datetime.today().date())
+    except Exception as e:
+        print(f"Fehler beim Rendern von /test/: {e}")
+        return f"Fehler beim Rendern: {e}", 500
 
-    return render_template("test.html", tasks=tasks, today=datetime.today().date())
+
 
 
 # --- App-Start ---
