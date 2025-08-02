@@ -145,6 +145,110 @@ def test_route():
         print(f"Fehler beim Rendern von /test/: {e}")
         return f"Fehler beim Rendern: {e}", 500
 
+# --- Beispiel für UPDATE mit Flask-SQLAlchemy ---
+@app.route('/tasks/update/<int:task_id>', methods=['POST'])
+def update_task(task_id):
+    """
+    Aktualisiert einen Task anhand seiner ID.
+    Erwartet im POST-Body die Felder 'content' und/oder 'mood'.
+    Gibt das aktualisierte Objekt als JSON zurück.
+    """
+    # Task anhand der ID aus der DB holen
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({"error": "Task nicht gefunden"}), 404
+
+    # Neue Werte aus dem Request holen
+    new_content = request.form.get('content')
+    new_mood = request.form.get('mood')
+
+    # Felder aktualisieren, falls neue Werte übergeben wurden
+    if new_content:
+        task.content = new_content
+    if new_mood:
+        task.mood = new_mood
+
+    # Änderungen speichern
+    db.session.commit()
+
+    # Ergebnis zurückgeben
+    return jsonify({
+        "id": task.id,
+        "content": task.content,
+        "mood": task.mood
+    })
+
+# --- Beispiel für DELETE mit Flask-SQLAlchemy ---
+@app.route('/tasks/delete/<int:task_id>', methods=['POST', 'DELETE'])
+def delete_task(task_id):
+    """
+    Löscht einen Task anhand seiner ID.
+    Gibt eine Bestätigung als JSON zurück.
+    """
+    # Task anhand der ID aus der DB holen
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({"error": "Task nicht gefunden"}), 404
+
+    # Task aus der Session entfernen und löschen
+    db.session.delete(task)
+    db.session.commit()
+
+    # Ergebnis zurückgeben
+    return jsonify({
+        "message": f"Task {task_id} wurde gelöscht."
+    })
+
+# --- Beispiel für CREATE mit Flask-SQLAlchemy ---
+@app.route('/tasks/create', methods=['POST'])
+def create_task():
+    """
+    Legt einen neuen Task an.
+    Erwartet im POST-Body die Felder 'content', 'people', 'occurred_on', 'occurred_time', 'user_id', 'category', 'mood'.
+    Gibt das neue Objekt als JSON zurück.
+    """
+    # Felder aus dem Request holen
+    content = request.form.get('content', '').strip()
+    people = request.form.get('people', '').strip()
+    occurred_on_str = request.form.get('occurred_on', '').strip()
+    occurred_time_str = request.form.get('occurred_time', '').strip()
+    user_id = request.form.get('user_id', type=int, default=1)
+    category = request.form.get('category', '').strip()
+    mood = request.form.get('mood', '').strip()
+
+    # Pflichtfeld-Validierung
+    if not content:
+        return jsonify({"error": "Das Inhaltsfeld darf nicht leer sein."}), 400
+
+    # Datum und Uhrzeit parsen
+    try:
+        occurred_on = datetime.strptime(f"{occurred_on_str} {occurred_time_str}", "%Y-%m-%d %H:%M")
+    except ValueError:
+        occurred_on = None
+
+    # Neuen Task anlegen
+    new_task = Task(
+        content=content,
+        people=people,
+        occurred_on=occurred_on,
+        user_id=user_id,
+        category=category,
+        mood=mood
+    )
+    db.session.add(new_task)
+    db.session.commit()
+
+    # Ergebnis zurückgeben
+    return jsonify({
+        "id": new_task.id,
+        "content": new_task.content,
+        "people": new_task.people,
+        "occurred_on": str(new_task.occurred_on),
+        "user_id": new_task.user_id,
+        "category": new_task.category,
+        "mood": new_task.mood
+    })
+
 
 
 
