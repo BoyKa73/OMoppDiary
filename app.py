@@ -81,6 +81,59 @@ def index():
     tasks = Task.query.filter_by(user_id=1).order_by(Task.occurred_on.desc()).all()
     return render_template("index.html", tasks=tasks, today=datetime.today().date())
 
+# --- NEU: Beispiele für Abfragen und Filtern mit Flask-SQLAlchemy ---
+@app.route('/tasks/filter')
+def filter_tasks():
+    """
+    Diese Route zeigt verschiedene Query- und Filter-Beispiele mit Flask-SQLAlchemy.
+    Die Ergebnisse werden als JSON ausgegeben.
+    """
+    # 1. Alle Tasks eines bestimmten Users (z.B. user_id=1)
+    tasks_user1 = Task.query.filter_by(user_id=1).all()
+
+    # 2. Tasks nach Kategorie filtern (z.B. "Alltag")
+    alltag_tasks = Task.query.filter_by(category="Alltag").all()
+
+    # 3. Tasks nach Stimmung filtern (z.B. "fröhlich")
+    happy_tasks = Task.query.filter_by(mood="fröhlich").all()
+
+    # 4. Tasks nach Datum sortieren (absteigend)
+    sorted_tasks = Task.query.order_by(Task.occurred_on.desc()).all()
+
+    # 5. Tasks mit Suchbegriff im Inhalt (z.B. alle mit "Park")
+    park_tasks = Task.query.filter(Task.content.contains("Park")).all()
+
+    # 6. Kombinierte Filter: Alle "fröhlichen" Tasks von User 1
+    happy_user1_tasks = Task.query.filter_by(user_id=1, mood="fröhlich").all()
+
+    # 7. Filter mit mehreren Bedingungen (AND):
+    # Alle Tasks von User 1, Kategorie "Alltag", Stimmung "neutral"
+    from sqlalchemy import and_
+    complex_tasks = Task.query.filter(and_(
+        Task.user_id==1,
+        Task.category=="Alltag",
+        Task.mood=="neutral"
+    )).all()
+
+    # 8. Filter mit mehreren Bedingungen (OR):
+    from sqlalchemy import or_
+    or_tasks = Task.query.filter(or_(
+        Task.mood=="fröhlich",
+        Task.mood=="traurig"
+    )).all()
+
+    # Die Ergebnisse als Dictionary für die JSON-Ausgabe
+    result = {
+        "tasks_user1": [t.content for t in tasks_user1],
+        "alltag_tasks": [t.content for t in alltag_tasks],
+        "happy_tasks": [t.content for t in happy_tasks],
+        "sorted_tasks": [t.content for t in sorted_tasks],
+        "park_tasks": [t.content for t in park_tasks],
+        "happy_user1_tasks": [t.content for t in happy_user1_tasks],
+        "complex_tasks": [t.content for t in complex_tasks],
+        "or_tasks": [t.content for t in or_tasks],
+    }
+    return jsonify(result)
 
 @app.route('/test/')
 def test_route():
